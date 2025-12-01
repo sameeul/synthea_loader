@@ -23,7 +23,7 @@ HOST_PORT=5434  # Different port to avoid conflicts
 CONTAINER_PORT=5432
 
 # Schema file to test
-SCHEMA_FILE=".omop-schema/CDM5.3.0_DDL_PostgreSQL.sql"
+SCHEMA_FILE="./omop-schema/CDM5.3.0_DDL_PostgreSQL.sql"
 
 # Dataset configuration
 DATASET_NAME="synthea23m"  # Change this to use different datasets (synthea1k, synthea10k, synthea23m, etc.)
@@ -255,23 +255,22 @@ EOF
 }
 
 # Load data in dependency order
-# Vocabulary files have NO HEADER, patient files have HEADER
 log "Step 1: Loading vocabulary reference tables (no dependencies)..."
-load_csv "vocabulary" "$VOCAB_DIR/VOCABULARY.csv" $'\t' "false"
-load_csv "domain" "$VOCAB_DIR/DOMAIN.csv" $'\t' "false"
-load_csv "concept_class" "$VOCAB_DIR/CONCEPT_CLASS.csv" $'\t' "false"
-load_csv "relationship" "$VOCAB_DIR/RELATIONSHIP.csv" $'\t' "false"
+load_csv "vocabulary" "$VOCAB_DIR/VOCABULARY.csv" $'\t'
+load_csv "domain" "$VOCAB_DIR/DOMAIN.csv" $'\t'
+load_csv "concept_class" "$VOCAB_DIR/CONCEPT_CLASS.csv" $'\t'
+load_csv "relationship" "$VOCAB_DIR/RELATIONSHIP.csv" $'\t'
 
 log "Step 2: Loading concept table (depends on vocabulary, domain, concept_class)..."
-load_csv "concept" "$VOCAB_DIR/CONCEPT.csv" $'\t' "false"
+load_csv "concept" "$VOCAB_DIR/CONCEPT.csv" $'\t'
 
 log "Step 3: Loading concept relationship tables (depend on concept)..."
-load_csv "concept_relationship" "$VOCAB_DIR/CONCEPT_RELATIONSHIP.csv" $'\t' "false"
-load_csv "concept_synonym" "$VOCAB_DIR/CONCEPT_SYNONYM.csv" $'\t' "false"
-load_csv "concept_ancestor" "$VOCAB_DIR/CONCEPT_ANCESTOR.csv" $'\t' "false"
+load_csv "concept_relationship" "$VOCAB_DIR/CONCEPT_RELATIONSHIP.csv" $'\t'
+load_csv "concept_synonym" "$VOCAB_DIR/CONCEPT_SYNONYM.csv" $'\t'
+load_csv "concept_ancestor" "$VOCAB_DIR/CONCEPT_ANCESTOR.csv" $'\t'
 
 log "Step 4: Loading drug strength (depends on concept)..."
-load_csv "drug_strength" "$VOCAB_DIR/DRUG_STRENGTH.csv" $'\t' "false"
+load_csv "drug_strength" "$VOCAB_DIR/DRUG_STRENGTH.csv" $'\t'
 
 log "Step 5: Loading person table (base patient table)..."
 load_csv "person" "$PATIENT_DIR/person.csv" ','
