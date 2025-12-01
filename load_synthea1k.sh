@@ -11,15 +11,15 @@ set -euo pipefail
 
 # Docker / Postgres
 POSTGRES_IMAGE="postgres:16"
-CONTAINER_NAME="pg-omop"
+CONTAINER_NAME="pg-omop2"
 
 PG_SUPERUSER="postgres"
 PG_SUPERPASS="testpass123"
 
-TEST_DB="ohdsi"
+TEST_DB="ohdsi2"
 TEST_SCHEMA="omop531"
 
-HOST_PORT=5435  # Different port to avoid conflicts
+HOST_PORT=5436  # Different port to avoid conflicts
 CONTAINER_PORT=5432
 
 # Schema file to test
@@ -150,6 +150,9 @@ if ls "$VOCAB_DIR"/*.bz2 >/dev/null 2>&1; then
 else
   log "No .bz2 files found in vocab; assuming plain .csv already."
 fi
+
+# fix for backslashes
+sed -i 's/\\\t\+/\t/g' "$VOCAB_DIR/CONCEPT_SYNONYM.csv"
 
 ########################################
 # Step 3: Clean up any existing test container

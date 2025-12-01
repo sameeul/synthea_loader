@@ -151,6 +151,9 @@ else
   log "No .bz2 files found in vocab; assuming plain .csv already."
 fi
 
+# fix for backslashes
+sed -i 's/\\\t\+/\t/g' "$VOCAB_DIR/CONCEPT_SYNONYM.csv"
+
 ########################################
 # Step 3: Clean up any existing test container
 ########################################
